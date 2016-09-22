@@ -1,3 +1,4 @@
+# Enumerate firewall settings
 from lib.common import helpers
 
 class Module:
