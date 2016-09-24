@@ -8,13 +8,13 @@ class Module:
         # metadata info about the module, not modified during runtime
         self.info = {
             # name for the module that will appear in module menus
-            'Name': 'Linux Hashdump',
+            'Name': 'Linux iptables enumeration',
 
             # list of one or more authors for the module
-            'Author': ['@harmj0y'],
+            'Author': ['@bneg'],
 
             # more verbose multi-line description of the module
-            'Description': ("Extracts the /etc/passwd and /etc/shadow, unshadowing the result."),
+            'Description': ("Extracts the iptables firewall rules."),
 
             # True if the module needs to run in the background
             'Background' : False,
@@ -62,27 +62,9 @@ class Module:
     def generate(self):
 
         script = """
-f = open("/etc/passwd")
-passwd = f.readlines()
-f.close()
-
-f2 = open("/etc/shadow")
-shadow = f2.readlines()
-f2.close()
-
-users = {}
-
-for line in shadow:
-    parts = line.strip().split(":")
-    username, pwdhash = parts[0], parts[1]
-    users[username] = pwdhash
-
-for line in passwd:
-    parts = line.strip().split(":")
-    username = parts[0]
-    info = ":".join(parts[2:])
-    if username in users:
-        print "%s:%s:%s" %(username, users[username], info)
+from subprocess import check_output
+out = check_output(["iptables","-S"])
+print out
 """
 
         return script
